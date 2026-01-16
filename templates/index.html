@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makale Quartile Bulucu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #2c3e50;
+        }
+        .main-container {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header-section {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 2.5rem;
+            border-radius: 16px 16px 0 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        .search-section {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+        .form-control {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        .form-control:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            outline: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(79, 70, 229, 0.2);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(16, 185, 129, 0.2);
+        }
+        .result-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            margin: 2rem 0;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        .result-header {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .result-body {
+            padding: 2.5rem;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .info-item {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #4f46e5;
+            transition: all 0.3s ease;
+        }
+        .info-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        .quartile-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        .table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        .table th {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            padding: 1rem 1.25rem;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .table td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #f1f3f4;
+            vertical-align: middle;
+        }
+        .table tbody tr:hover {
+            background: #f8f9fa;
+        }
+        .source-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        .alert-success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 1px solid #a7f3d0;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            color: #064e3b;
+        }
+        .alert-warning {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffc107 100%);
+            border: 1px solid #ffc107;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            color: #664d03;
+        }
+        .badge-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .badge-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        h1, h4, h5, h6 {
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .text-muted {
+            color: #6c757d !important;
+        }
+        .fw-bold {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="main-container">
+            <!-- Header -->
+            <div class="header-section">
+                <h1 class="mb-0">
+                    <i class="fas fa-search me-3"></i>
+                    Makale Quartile Bulucu
+                </h1>
+                <p class="mb-0 opacity-75">Akademik makalelerin quartile analiz aracı</p>
+            </div>
+
+            <!-- Search Section -->
+            <div class="search-section">
+                <form method="POST" class="row g-3">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <input type="text" name="title" class="form-control" placeholder="Makale başlığı girin..." required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search me-2"></i>Quartile Bul
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <span class="text-muted">veya</span>
+                    <div class="mt-3">
+                        <a href="/excel-upload" class="btn btn-success">
+                            <i class="fas fa-file-excel me-2"></i>Excel Dosyası Yükle
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            {% if result %}
+            <div class="result-card fade-in">
+                <div class="result-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>
+                        Analiz Sonuçları
+                    </h4>
+                </div>
+                <div class="result-body">
+                    <!-- Basic Info Grid -->
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <h6 class="text-muted mb-2">Makale Başlığı</h6>
+                            <p class="mb-0 fw-bold">{{ result.title }}</p>
+                        </div>
+                        <div class="info-item">
+                            <h6 class="text-muted mb-2">Dergi</h6>
+                            <p class="mb-0 fw-bold">{{ result.journal }}</p>
+                        </div>
+                        <div class="info-item">
+                            <h6 class="text-muted mb-2">ISSN</h6>
+                            <p class="mb-0 fw-bold">{{ result.issn }}</p>
+                        </div>
+                        <div class="info-item">
+                            <h6 class="text-muted mb-2">Yayın Yılı</h6>
+                            <p class="mb-0 fw-bold">{{ result.year }}</p>
+                        </div>
+                        <div class="info-item">
+                            <h6 class="text-muted mb-2">Genel Quartile</h6>
+                            <p class="mb-0">
+                                <span class="badge badge-success fs-6">{{ result.quartile }}</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Year Categories Section -->
+                    {% if result.year_categories %}
+                    <div class="quartile-section">
+                        <h5 class="mb-3">
+                            <i class="fas fa-calendar-alt me-2"></i>
+                            Makalenin Yayın Yılındaki Quartile Bilgileri ({{ result.year }})
+                        </h5>
+                        
+                        {% if result.has_exact_year %}
+                            <div class="alert alert-success mb-3">
+                                <i class="fas fa-check-circle me-2"></i>
+                                <strong>{{ result.year }}</strong> yılı için tam quartile bilgisi bulundu
+                            </div>
+                        {% else %}
+                            <div class="alert alert-warning mb-3">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <strong>{{ result.year }}</strong> yılı için veri bulunamadı, en yakın yıllar:
+                            </div>
+                        {% endif %}
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fas fa-tags me-2"></i>Kategori</th>
+                                        <th><i class="fas fa-calendar me-2"></i>Yıl</th>
+                                        <th><i class="fas fa-chart-bar me-2"></i>Quartile</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for category in result.year_categories %}
+                                    <tr>
+                                        <td>{{ category.category }}</td>
+                                        <td>{{ category.year }}</td>
+                                        <td>
+                                            {% if category.year == result.year %}
+                                                <span class="badge badge-success">{{ category.quartile }}</span>
+                                            {% else %}
+                                                <span class="badge badge-warning">{{ category.quartile }} <small>(en yakın)</small></span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- General Categories Table -->
+                    {% if result.categories %}
+                    <div class="mt-4">
+                        <h5 class="mb-3">
+                            <i class="fas fa-history me-2"></i>
+                            Tüm Yıllardaki Quartile Tablosu
+                        </h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Kategori</th>
+                                        <th>Yıl</th>
+                                        <th>Quartile</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for category in result.categories %}
+                                    <tr>
+                                        <td>{{ category.category }}</td>
+                                        <td>{{ category.year }}</td>
+                                        <td>{{ category.quartile }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Source Section -->
+                    <div class="source-section">
+                        <h6 class="mb-3">
+                            <i class="fas fa-link me-2"></i>
+                            Veri Kaynağı
+                        </h6>
+                        {% if result.scimago_url %}
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-external-link-alt me-3 text-primary"></i>
+                            <a href="{{ result.scimago_url }}" target="_blank" class="text-decoration-none">
+                                <strong>SCImago Journal Rank</strong>
+                                <small class="text-muted d-block">{{ result.scimago_url }}</small>
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
