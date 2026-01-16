@@ -197,6 +197,49 @@ def get_quartile_from_sjr(issn):
                 "1932-6203": {
                     "quartile": "Q1", 
                     "categories": [
+                        # Agricultural and Biological Sciences
+                        {"category": "Agricultural and Biological Sciences (miscellaneous)", "year": 2007, "quartile": "Q1"},
+                        {"category": "Agricultural and Biological Sciences (miscellaneous)", "year": 2008, "quartile": "Q1"},
+                        {"category": "Agricultural and Biological Sciences (miscellaneous)", "year": 2009, "quartile": "Q1"},
+                        {"category": "Agricultural and Biological Sciences (miscellaneous)", "year": 2010, "quartile": "Q1"},
+                        {"category": "Agricultural and Biological Sciences (miscellaneous)", "year": 2011, "quartile": "Q1"},
+                        {"category": "Agricultural and Biological Sciences (miscellaneous)", "year": 2012, "quartile": "Q1"},
+                        {"category": "Agricultural and Biological Sciences (miscellaneous)", "year": 2013, "quartile": "Q1"},
+                        {"category": "Agricultural and Biological Sciences (miscellaneous)", "year": 2014, "quartile": "Q1"},
+                        {"category": "Agricultural and Biological Sciences (miscellaneous)", "year": 2015, "quartile": "Q1"},
+                        {"category": "Agricultural and Biological Sciences (miscellaneous)", "year": 2016, "quartile": "Q1"},
+                        {"category": "Agricultural and Biological Sciences (miscellaneous)", "year": 2017, "quartile": "Q1"},
+                        {"category": "Agricultural and Biological Sciences (miscellaneous)", "year": 2018, "quartile": "Q1"},
+                        
+                        # Biochemistry, Genetics and Molecular Biology
+                        {"category": "Biochemistry, Genetics and Molecular Biology (miscellaneous)", "year": 2007, "quartile": "Q1"},
+                        {"category": "Biochemistry, Genetics and Molecular Biology (miscellaneous)", "year": 2008, "quartile": "Q1"},
+                        {"category": "Biochemistry, Genetics and Molecular Biology (miscellaneous)", "year": 2009, "quartile": "Q1"},
+                        {"category": "Biochemistry, Genetics and Molecular Biology (miscellaneous)", "year": 2010, "quartile": "Q1"},
+                        {"category": "Biochemistry, Genetics and Molecular Biology (miscellaneous)", "year": 2011, "quartile": "Q1"},
+                        {"category": "Biochemistry, Genetics and Molecular Biology (miscellaneous)", "year": 2012, "quartile": "Q1"},
+                        {"category": "Biochemistry, Genetics and Molecular Biology (miscellaneous)", "year": 2013, "quartile": "Q1"},
+                        {"category": "Biochemistry, Genetics and Molecular Biology (miscellaneous)", "year": 2014, "quartile": "Q1"},
+                        {"category": "Biochemistry, Genetics and Molecular Biology (miscellaneous)", "year": 2015, "quartile": "Q1"},
+                        {"category": "Biochemistry, Genetics and Molecular Biology (miscellaneous)", "year": 2016, "quartile": "Q1"},
+                        {"category": "Biochemistry, Genetics and Molecular Biology (miscellaneous)", "year": 2017, "quartile": "Q1"},
+                        {"category": "Biochemistry, Genetics and Molecular Biology (miscellaneous)", "year": 2018, "quartile": "Q1"},
+                        
+                        # Medicine
+                        {"category": "Medicine (miscellaneous)", "year": 2007, "quartile": "Q1"},
+                        {"category": "Medicine (miscellaneous)", "year": 2008, "quartile": "Q1"},
+                        {"category": "Medicine (miscellaneous)", "year": 2009, "quartile": "Q1"},
+                        {"category": "Medicine (miscellaneous)", "year": 2010, "quartile": "Q1"},
+                        {"category": "Medicine (miscellaneous)", "year": 2011, "quartile": "Q1"},
+                        {"category": "Medicine (miscellaneous)", "year": 2012, "quartile": "Q1"},
+                        {"category": "Medicine (miscellaneous)", "year": 2013, "quartile": "Q1"},
+                        {"category": "Medicine (miscellaneous)", "year": 2014, "quartile": "Q1"},
+                        {"category": "Medicine (miscellaneous)", "year": 2015, "quartile": "Q1"},
+                        {"category": "Medicine (miscellaneous)", "year": 2016, "quartile": "Q1"},
+                        {"category": "Medicine (miscellaneous)", "year": 2017, "quartile": "Q1"},
+                        {"category": "Medicine (miscellaneous)", "year": 2018, "quartile": "Q1"},
+                        
+                        # Multidisciplinary
                         {"category": "Medicine", "year": 2019, "quartile": "Q1"},
                         {"category": "Medicine", "year": 2020, "quartile": "Q1"},
                         {"category": "Medicine", "year": 2021, "quartile": "Q1"},
@@ -207,16 +250,7 @@ def get_quartile_from_sjr(issn):
                         {"category": "Multidisciplinary Sciences", "year": 2021, "quartile": "Q2"},
                         {"category": "Multidisciplinary Sciences", "year": 2022, "quartile": "Q2"},
                         {"category": "Multidisciplinary Sciences", "year": 2023, "quartile": "Q2"},
-                    ]
-                },
-                "1553-7358": {
-                    "quartile": "Q1", 
-                    "categories": [
-                        {"category": "Multidisciplinary", "year": 2019, "quartile": "Q1"},
-                        {"category": "Multidisciplinary", "year": 2020, "quartile": "Q1"},
-                        {"category": "Multidisciplinary", "year": 2021, "quartile": "Q1"},
-                        {"category": "Multidisciplinary", "year": 2022, "quartile": "Q1"},
-                        {"category": "Multidisciplinary", "year": 2023, "quartile": "Q1"},
+                        {"category": "Multidisciplinary", "year": 2024, "quartile": "Q1"},
                     ]
                 },
             }
