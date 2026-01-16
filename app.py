@@ -253,6 +253,47 @@ def get_quartile_from_sjr(issn):
                         {"category": "Multidisciplinary", "year": 2024, "quartile": "Q1"},
                     ]
                 },
+                "1553-7358": {
+                    "quartile": "Q1", 
+                    "categories": [
+                        {"category": "Multidisciplinary", "year": 2019, "quartile": "Q1"},
+                        {"category": "Multidisciplinary", "year": 2020, "quartile": "Q1"},
+                        {"category": "Multidisciplinary", "year": 2021, "quartile": "Q1"},
+                        {"category": "Multidisciplinary", "year": 2022, "quartile": "Q1"},
+                        {"category": "Multidisciplinary", "year": 2023, "quartile": "Q1"},
+                        {"category": "Multidisciplinary", "year": 2024, "quartile": "Q1"},
+                    ]
+                },
+                "0028-0836": {  # Nature
+                    "quartile": "Q1", 
+                    "categories": [
+                        {"category": "Multidisciplinary", "year": 2019, "quartile": "Q1"},
+                        {"category": "Multidisciplinary", "year": 2020, "quartile": "Q1"},
+                        {"category": "Multidisciplinary", "year": 2021, "quartile": "Q1"},
+                        {"category": "Multidisciplinary", "year": 2022, "quartile": "Q1"},
+                        {"category": "Multidisciplinary", "year": 2023, "quartile": "Q1"},
+                    ]
+                },
+                "0036-8075": {  # Science
+                    "quartile": "Q1", 
+                    "categories": [
+                        {"category": "Multidisciplinary", "year": 2019, "quartile": "Q1"},
+                        {"category": "Multidisciplinary", "year": 2020, "quartile": "Q1"},
+                        {"category": "Multidisciplinary", "year": 2021, "quartile": "Q1"},
+                        {"category": "Multidisciplinary", "year": 2022, "quartile": "Q1"},
+                        {"category": "Multidisciplinary", "year": 2023, "quartile": "Q1"},
+                    ]
+                },
+                "0006-291X": {  # Cell
+                    "quartile": "Q1", 
+                    "categories": [
+                        {"category": "Biochemistry, Genetics and Molecular Biology", "year": 2019, "quartile": "Q1"},
+                        {"category": "Biochemistry, Genetics and Molecular Biology", "year": 2020, "quartile": "Q1"},
+                        {"category": "Biochemistry, Genetics and Molecular Biology", "year": 2021, "quartile": "Q1"},
+                        {"category": "Biochemistry, Genetics and Molecular Biology", "year": 2022, "quartile": "Q1"},
+                        {"category": "Biochemistry, Genetics and Molecular Biology", "year": 2023, "quartile": "Q1"},
+                    ]
+                },
             }
             if issn in known_journals:
                 data = known_journals[issn]
