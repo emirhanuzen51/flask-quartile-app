@@ -331,10 +331,13 @@ def process_excel(file):
             # Quartile, kategori ve yıl bilgilerini al
             if issn:
                 quartile_result = get_quartile_from_sjr(issn)
+                print(f"Excel için SCImago sonucu: {quartile_result}")
                 if len(quartile_result) == 4:
                     quartile, categories, years, scimago_url = quartile_result
+                    print(f"Excel için bulunan quartile: {quartile}, kategori sayısı: {len(categories)}")
                 else:
-                    quartile, categories, years, scimago_url = None, [], [], None
+                    quartile, categories, years, scimago_url = None, [], [], f"https://www.scimagojr.com/journalsearch.php?q={issn}" if issn else None
+                    print("Excel için SCImago'dan veri alınamadı")
             else:
                 quartile, categories, years, scimago_url = None, [], [], None
 
