@@ -200,10 +200,13 @@ def index():
 
         # 2) SCImago → Quartile + Kategoriler + Yıllar
         quartile_result = get_quartile_from_sjr(issn)
+        print(f"SCImago sonucu: {quartile_result}")
         if len(quartile_result) == 4:
             quartile, categories, years, scimago_url = quartile_result
+            print(f"Bulunan quartile: {quartile}, kategori sayısı: {len(categories)}")
         else:
             quartile, categories, years, scimago_url = None, [], [], f"https://www.scimagojr.com/journalsearch.php?q={issn}" if issn else None
+            print("SCImago'dan veri alınamadı")
 
         result = {
             "title": title,
