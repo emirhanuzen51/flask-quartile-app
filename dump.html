@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+  <head>
+ <meta charset="UTF-8">
+ 
+  <title>SJR - Journal Search</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no" />
+  
+ <!--<link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css' />-->
+  <link href='./gridcss/grid.css?20250922' rel='stylesheet' type='text/css' />
+   <link href='./gridcss/sjr.css?202501' rel='stylesheet' type='text/css' />
+ <link rel="shortcut icon" href="favicon.ico" />
+ <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<link href='./multisitebar/multisite.css' rel='stylesheet' type='text/css' />
+<script src="./js/raceme.min.js"></script>
+ <!-- <script src="./js/papaparse.min.js"></script>
+  
+  <script src="./js/Dataset.min.js"></script>
+  <script src="./js/Axis.min.js"></script>
+  <script src="./js/Elements.min.js"></script>
+  <script src="./js/Frame.min.js"></script>
+  <script src="./js/Properties.min.js"></script>
+  <script src="./js/View.min.js"></script>
+  <script src="./js/Utils.min.js"></script>
+  <script src="./js/Player.min.js"></script>
+  <script src="./js/Legend.min.js"></script>
+  <script src="./js/tooltip.min.js"></script>
+  <script src="./js/cola.min.js"></script>
+
+ 
+ <script src="./gridcss/grid.js"></script>-->
+ <script src="./js/mainmenu.js"></script>
+ 
+ 
+  </head>
+  <body>
+
+<!-- cookieconsent  -->
+<!--<script src="js/countries_cookie.js"></script>
+<script src="js/cookieconsent.js?v=6"></script> **** -->
+<!-- To check analytics or marketing or both cookies -->
+<!--<script src="js/checkcookiescategories.js?v=3"></script>  **** -->
+<!-- end cookie consent -->
+
+
+<aside class="multisitebar">
+	<div class="multisitebar_central">
+		<div class="siteslinks">
+			<a href="https://www.scimagojr.com" class="sjrlink currentsite"><img src="https://www.scimagojr.com/multisitebar/sjr-sitebar-128.png" alt="SCImago Journal & Country Rank" /><span class="multisite_tooltip">SCImago Journal & Country Rank</span></a>
+			<a href="https://www.scimagoir.com" class="scimagoirlink"><img src="https://www.scimagojr.com/multisitebar/sir.png" alt="SCImago Institutions Rankings" /><span class="multisite_tooltip">SCImago Institutions Rankings</span></a>
+			<a href="https://www.scimagomedia.com" class="scimagomedialink"><img src="https://www.scimagojr.com/multisitebar/logo-white-128.png" alt="SCImago Media Rankings" /><span class="multisite_tooltip">SCImago Media Rankings</span></a>
+			<a href="https://www.scimagoiber.com" class="siriberlink"><img src="https://www.scimagojr.com/multisitebar/siriber.png" alt="SCImago Iber" /><span class="multisite_tooltip">SCImago Iber</span></a>
+			<a href="https://www.scimagorc.com" class="srcrlink"><img src="https://www.scimagojr.com/multisitebar/srcr.png" alt="SCImago Research Centers Ranking" /><span class="multisite_tooltip">SCImago Research Centers Ranking</span></a>
+			<a href="https://www.graphica.app" class="graphicalink"><img src="https://www.scimagojr.com/multisitebar/graphica.png" alt="SCImago Graphica" /><span class="multisite_tooltip">SCImago Graphica</span></a>
+			<a href="https://www.scimagoepi.com" class="epilink"><img src="https://www.scimagojr.com/multisitebar/epi.png" alt="Ediciones Profesionales de la Información " /><span class="multisite_tooltip">Ediciones Profesionales de la Informaci&oacute;n</span></a>
+		</div>
+		<div id="multisitebar_scimagolablink">
+			<a href="https://www.scimagolab.com"><img src="https://www.scimagojr.com/multisitebar/scimagolab-mobile.svg" alt="SCImago Lab" class="multisitebar_scimagolablink_mobile" /><img class="multisitebar_scimagolablink_desktop" src="https://www.scimagojr.com/multisitebar/scimagolab-white.svg" alt="SCImago Lab" /></a>
+		</div>
+	</div>
+</aside>
+
+
+<!-- <div class="related_sites"><span class="related_sites_text">also developed by scimago:</span> <a href="https://www.scimagoir.com"><img src="./img/siricon.png" alt="" />Scimago Institutions Rankings</a></div>  -->
+
+
+
+
+<div class='header_home' >
+
+	<div class=" menuheader">
+		<div id="head-full" class="home-head-container">
+			<div id="logocontainer">
+				<a href=".\" title="home">
+				<img id="logo" src="./img/logo.svg" alt="SJR" />		
+				</a>
+			</div>
+		
+	
+
+
+		<div id='menu_boton' >
+			<img src='./img/menu.png' id="open_menu_icon" alt='menu'>
+			<img src='./img/close-menu-icon.png' id="close_menu_icon" alt='close menu' style="display: none;">
+		</div>	
+						
+		<div id='mainmenu' class="homemenu" >
+			<ul>
+			<li><a href='journalrank.php'  >Journal Rankings</a></li>
+			<li><a href='journalvalue.php'  >Journal Value</a></li>			
+			<li><a href='countryrank.php'  >Country Rankings</a></li>			
+			<li><a href='viztools.php'  >Viz Tools</a></li>			
+			<!--<li><a href='help.php'  >Help</a></li>-->			
+			<li><a href='aboutus.php'  >About Us</a></li>			
+			
+			</ul>			
+
+						<!--<div id="serach-container"> 
+				<form id="searchbox" action="journalsearch.php" method="get">
+				  <input type="text" name="q" value="Search" id="searchinput" onfocus="if(this.value == 'Search') { this.value = ''; }" onblur="if (this.value=='') {this.value='Search';}">
+				  <input type="submit" id="searchbutton" value="" />
+				  
+				</form>
+			</div>-->
+			
+		</div>
+ 
+
+	
+	  </div><!-- head full -->
+	</div><!-- menuheader-->
+
+	
+	<div class="column headerImg header_search_result">
+
+		
+			<!--<div class="header-title">
+				<h1 class="title1">SCImago Journal & Country Rank</h1>
+				<h2 class="subtitle1">Target journals that boost your research or gain insights to enhance your journal’s scientific influence.</h2>
+			</div>-->
+
+	  		<form id="searchbox" action="journalsearch.php" method="get">
+			  <!--<input type="text" name="q" value="Enter Journal Title, ISSN or Publisher Name" id="searchinput" onfocus="if(this.value == 'Enter Journal Title, ISSN or Publisher Name') { this.value = ''; }" onblur="if (this.value=='') {this.value='Enter Journal Title, ISSN or Publisher Name';}">-->
+			  <input type="text" name="q" value="2169 3536" id="searchinput" autocomplete="off" placeholder="Enter Journal Title, ISSN or Publisher Name">
+			  <input type="submit" id="searchbutton" value="" />
+			  
+			</form>
+			<a href="journalrank.php" id="explore-ranks">Explore rankings</a>
+
+
+	</div>
+</div><!-- header_home -->
+<script defer data-domain="scimagojr.com" src="https://plausible.scimago.es/js/script.js"></script>
+
+
+<!-- adblocker Adsense
+<script async src="https://fundingchoicesmessages.google.com/i/pub-7636113250813806?ers=1"></script><script>(function() {function signalGooglefcPresent() {if (!window.frames['googlefcPresent']) {if (document.body) {const iframe = document.createElement('iframe'); iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px;'; iframe.style.display = 'none'; iframe.name = 'googlefcPresent'; document.body.appendChild(iframe);} else {setTimeout(signalGooglefcPresent, 0);}}}signalGooglefcPresent();})();</script>
+
+
+-->
+<div class="journaldescription colblock">
+
+<!--
+<form id="searchboxresults" action="journalsearch.php" method="get">
+  <input type="text" name="q" value="2169 3536" id="searchinput" onfocus="if(this.value == 'Enter Journal Title, ISSN or Publisher Name') { this.value = ''; }" onblur="if (this.value=='') {this.value='Enter Journal Title, ISSN or Publisher Name';}">
+  <input type="submit" id="searchbutton" value="">
+  </form>-->
+  
+
+
+<div class="search_results">
+<!-- <a href="journalsearch.php?q=16590&tip=sid&clean=0"><span class="jrnlname">Lancet, The</span>United Kingdom<br />Elsevier Limited</a> -->
+		<a href="journalsearch.php?q=21100374601&tip=sid&clean=0">
+				<div class="sresult_item"><span class="jrnlname">IEEE Access</span>United States<br />Institute of Electrical and Electronics Engineers Inc.</div>
+
+				<div class="sourceLink"><img src="./img/arrow-corner-2x.png"></div>
+		</a>
+		
+
+<!-- 
+<div class="pagination" style="font-size: 14px;font-weight: 500;color: rgb(140,140,140);margin-top:40px;">1 - 50 of 1981
+<div class="pagination_buttons">
+<a href="#" class="disabled"><img src="img/pag_left.png" title="previous" /></a>
+<a href="#" class=""><img src="img/pag_right.png" title="next" /></a>
+</div>
+</div>
+ -->
+
+</div>
+<div class="pagination"><div class="wrap-pagination"><a href="#" class='prevpage disabled'><img src="img/prev-pagination.png" title="previous" rel="prev" /></a><a href='journalsearch.php?q=2169 3536&page=1&total_size=1' class='num-page currentpage'>1</a><a href="#" class='nextpage disabled'><img src="img/next-pagination.png" title="next" rel="next" /></a></div></div>
+
+</div>
+
+ <div class="foot">
+
+
+  <div class="wrap-footer">
+    <div class="colf"><a href="./" class="logofooter" ><img src="./img/logo-footer.svg" alt="SCImago Journal & Country Rank" /></a></div>
+    <div class="menufoot">
+        <div class="colf">
+          <h2>Services</h2>
+          <div class="menu-items-foot">
+            <ul>
+              <li><a href="journalrank.php">Journal Rankings</a></li>
+              <li><a href="countryrank.php">Country Rankings</a></li>
+              <li><a href="journalvalue.php">Journal Value</a></li>
+
+              <!--<li><a href="">Overview</a></li>-->
+              <!--<li><a href="">Ranking evolution</a></li>-->
+              <!--<li><a href="">Reports</a></li>-->
+            </ul>
+          </div>
+        </div>
+        <div class="colf">
+          <h2>About us</h2>
+          <div class="menu-items-foot">
+            <ul>
+              <!--<li><a href="">Certifications</a></li>-->
+              <li><a href="./aboutus.php">Who we are</a></li>
+              <!--<li><a href="">Partners and collaborators</a></li>-->
+              <li><a href="./contactus.php">Contact us</a></li>
+            </ul>
+          </div>
+
+        </div>
+        <div class="colf">
+          <h2>SCImago’s products</h2>
+          <div class="menu-items-foot">
+            <ul>
+              <li><a href="https://www.scimagojr.com/">SCImago Journal Country & Rank</a></li>
+              <li><a href="https://www.scimagoir.com/">SCImago Institutions Ranking</a></li>
+              <li><a href="https://www.scimagomedia.com/">SCImago Media Ranking</a></li>
+              <li><a href="https://www.scimagoiber.com/">SCImago Iber</a></li>
+              <li><a href="https://www.scimagorc.com/mena/index.php">SCImago Research Centers Ranking</a></li>
+              <li><a href="https://www.graphica.app/">SCImago Graphica</a></li>
+              <li><a href="https://www.scimagoepi.com/">Ediciones Profesionales de la Información</a></li>
+            </ul>
+          </div>
+        </div>
+    </div>
+
+  </div>
+
+
+  <div class="poweredby">Powered by:<br />
+    <a href="http://www.scopus.com" >Scopus®</a>
+  </div>
+
+  <div class="legalfoot">
+    <div class="copy">© 2025 SCImago Journal & Country Rank</div>
+    <!--<a class="nav-link ccb__edit" href="#">Cookie settings</a>-->
+    <!--<p><a href="https://www.scimagojr.com/cookie-policies.php">Cookie Policy</a></p>-->
+    <div class="legal">
+      <!--<a href="">Cookies?</a>-->
+      <a href="./legal-notice.php">Legal Notice</a>
+      <a href="./privacy-policy.php">Privacy Policy</a>
+    </div>
+  </div>
+
+  <!--<div class="colblock">
+    <a href="http://www.scimagolab.com" class="logofooter" >Developed by:<br /><img src="./img/logo_footer.png" alt="Scimago Lab" /></a>
+    <a href="http://www.scopus.com" class="logofooter" >Powered by:<br /><img src="./img/scopus.png" alt="Powered by scopus" /></a>
+
+    
+    <p>Follow us on <a href="https://twitter.com/ScimagoJR">@ScimagoJR</a><br /><br /><a href="http://www.scimagolab.com">Scimago Lab</a>, Copyright 2007-2025. Data Source: <a href="http://www.scopus.com">Scopus&reg;</a></p>
+    <img src="./img/estmodusinrebus.png" alt="" id="tagline" title="Est modus in rebus (There is a proper measure in things). Horatio." alt="Est modus in rebus (There is a proper measure in things). Horatio."/>-->
+
+    <!--<p><a class="nav-link ccb__edit" href="#">Cookie settings</a></p>
+    <p><a href="https://www.scimagojr.com/cookie-policies.php">Cookie Policy</a></p>-->
+    
+    <!--<p><a href="https://www.scimagojr.com/legal-notice.php">Legal Notice</a></p>
+    <p><a href="https://www.scimagojr.com/privacy-policy.php">Privacy Policy</a></p>
+  </div>-->
+
+</div>
+  
+
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"a0dca9063bcc4f36843d44036a794f36","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9bfe752a08088614',t:'MTc2ODc0MzEzOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

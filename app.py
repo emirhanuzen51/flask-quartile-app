@@ -43,89 +43,158 @@ def get_journal_info(title):
 # ----------------------------------------
 # 2) SCImago: ISSN ile Quartile bul (Cloudscraper ile)
 # ----------------------------------------
+# ----------------------------------------
+# 2) SCImago: ISSN ile Quartile bul (Cloudscraper ile)
+# ----------------------------------------
+# ----------------------------------------
+# 2) SCImago: ISSN ile Quartile bul
+# ----------------------------------------
+def fetch_page(url):
+    """
+    Sayfayı önce standart requests ile (referer ekleyerek),
+    olmazsa cloudscraper ile çekmeye çalışır.
+    """
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Referer': 'https://www.google.com/'
+    }
+
+    try:
+        # 1. Yöntem: Standart Requests (Genelde daha hızlı ve Referer ile çalışıyor)
+        r = requests.get(url, headers=headers, timeout=25)
+        if r.status_code == 200:
+            return r
+        
+        # 403 veya başka hata aldıysak devam et
+        print(f"Requests {r.status_code} döndü, Cloudscraper deneniyor...")
+
+    except Exception as e:
+        print(f"Requests hatası: {e}, Cloudscraper deneniyor...")
+
+    # 2. Yöntem: Cloudscraper
+    try:
+        scraper = cloudscraper.create_scraper(
+            browser={'browser': 'chrome', 'platform': 'windows', 'desktop': True}
+        )
+        r = scraper.get(url, timeout=25)
+        return r
+    except Exception as e:
+        print(f"Cloudscraper hatası: {e}")
+        return None
+
 def get_quartile_from_sjr(issn):
     if not issn:
         return None, [], [], None
 
-    scimago_url = f"https://www.scimagojr.com/journalsearch.php?q={issn}&tip=sid"
-    print(f"SCImago aranıyor: {issn} - URL: {scimago_url}")
+    # ISSN temizliği
+    issn = issn.replace(' ', '').replace('-', '')
+    clean_issn = f"{issn[:4]}-{issn[4:]}" if len(issn) == 8 else issn
+
+    scimago_url = f"https://www.scimagojr.com/journalsearch.php?q={clean_issn}&tip=sid"
+    print(f"SCImago Aranıyor: {clean_issn} - URL: {scimago_url}")
     
-    # Cloudscraper kullanımı (Engel aşmak için kritik nokta)
-    scraper = cloudscraper.create_scraper()
+    # Sayfayı çek
+    r = fetch_page(scimago_url)
     
+    if not r or r.status_code != 200:
+        print("SCImago sitesine erişilemedi.")
+        return None, [], [], scimago_url
+    
+    print(f"URL Erişim Başarılı: {r.url}")
+
     try:
-        r = scraper.get(scimago_url, timeout=20)
-        print(f"SCImago response status: {r.status_code}")
-        print(f"SCImago final URL: {r.url}")
-        
-        # Eğer direkt dergi sayfasına yönlendirmezse arama sonuçlarından bulmaya çalış
         soup = BeautifulSoup(r.text, "html.parser")
         
-        # Dergi detay sayfasında mıyız kontrol et
-        if "journalsearch.php" in r.url and "tip=sid" not in r.url:
-             # Arama sayfasındayız, ilk sonuca tıklamamız lazım
-             print("Arama sayfasında, dergi linki aranıyor...")
-             search_results = soup.find('div', class_='search_results')
-             if search_results:
-                 link = search_results.find('a', href=True)
-                 if link:
-                     journal_url = "https://www.scimagojr.com/" + link['href']
-                     print(f"Dergi linki bulundu: {journal_url}")
-                     r = scraper.get(journal_url)
-                     soup = BeautifulSoup(r.text, "html.parser")
-                     print(f"Dergi sayfasına gidildi: {r.url}")
-             else:
-                 print("Arama sonuçları bulunamadı")
+        # Arama sayfası kontrolü
+        is_search_page = "journalsearch.php" in r.url and "tip=sid" in r.url
+        final_journal_url = r.url
 
-        # Quartile Tablosunu Bul
+        if is_search_page:
+            print("Arama sonuç sayfasındayız...")
+            search_results = soup.select('.search_results a')
+            
+            if search_results:
+                # İlk sonuç
+                first_link = search_results[0]['href']
+                
+                # Bazen href full url olabilir, bazen relative
+                if not first_link.startswith('http'):
+                    final_journal_url = f"https://www.scimagojr.com/{first_link}"
+                else:
+                    final_journal_url = first_link
+                    
+                print(f"Dergi detayı bulundu: {final_journal_url}")
+                
+                # Detay sayfasına git
+                r_detail = fetch_page(final_journal_url)
+                if r_detail and r_detail.status_code == 200:
+                    soup = BeautifulSoup(r_detail.text, "html.parser")
+                else:
+                    print("Dergi detay sayfası açılamadı.")
+                    return None, [], [], final_journal_url
+            else:
+                print("Arama sonuçlarında hiçbir dergi bulunamadı.")
+                return None, [], [], scimago_url
+        
+        # --- Tablo Arama ---
         categories_info = []
         quartiles_table = None
         
-        # Sitedeki tablo yapısını dinamik arama
         tables = soup.find_all('table')
-        print(f"Toplam {len(tables)} tablo bulundu")
-        
-        for i, table in enumerate(tables):
-            table_text = table.get_text()[:100]  # İlk 100 karakter
-            print(f"Tablo {i}: {table_text}")
-            if "Quartile" in table_text or "Category" in table_text:
-                quartiles_table = table
-                print(f"Quartile tablosu bulundu: Tablo {i}")
+        for tbl in tables:
+            # Tablo içinde 'Quartile' yazısı arıyoruz
+            if 'Quartile' in tbl.get_text():
+                quartiles_table = tbl
+                print("Quartile veri tablosu bulundu.")
                 break
         
         if quartiles_table:
             rows = quartiles_table.find_all('tr')
-            print(f"Quartile tablosunda {len(rows)} satır bulundu")
-            
-            for row in rows[1:]:
-                cells = row.find_all('td')
-                if len(cells) >= 3:
+            for row in rows:
+                cols = row.find_all('td')
+                if len(cols) >= 3:
                     try:
-                        cat = cells[0].text.strip()
-                        yr = int(cells[1].text.strip())
-                        q = cells[2].text.strip()
-                        if q in ['Q1', 'Q2', 'Q3', 'Q4']:
-                            categories_info.append({'category': cat, 'year': yr, 'quartile': q})
-                            print(f"Bulunan veri: {cat} - {yr} - {q}")
-                    except Exception as e:
-                        print(f"Satır işleme hatası: {e}")
+                        texts = [c.get_text(strip=True) for c in cols]
+                        year = None
+                        quartile = None
+                        category = texts[0]
+                        
+                        for t in texts:
+                             if t.isdigit() and len(t) == 4:
+                                 year = int(t)
+                             elif t in ['Q1', 'Q2', 'Q3', 'Q4']:
+                                 quartile = t
+                        
+                        if year and quartile:
+                            categories_info.append({
+                                'category': category,
+                                'year': year,
+                                'quartile': quartile
+                            })
+                    except Exception:
                         continue
-        
-        # Veri bulundu mu?
+        else:
+            print("Tablo bulunamadı.")
+            # Grid yapısı kontrol eklenebilir ama şimdilik tablo yeterli
+            pass
+
         if categories_info:
             latest_entry = max(categories_info, key=lambda x: x['year'])
             latest_quartile = latest_entry['quartile']
             years_list = sorted(list(set(c['year'] for c in categories_info)))
-            print(f"Başarılı! {len(categories_info)} veri bulundu. Son quartile: {latest_quartile}")
-            return latest_quartile, categories_info, years_list, r.url
-        else:
-            print("Hiç quartile verisi bulunamadı!")
             
-        return None, [], [], r.url
+            print(f"Başarılı: En güncel {latest_entry['year']} - {latest_quartile}")
+            return latest_quartile, categories_info, years_list, final_journal_url
+            
+        print("Veri çekilemedi.")
+        return None, [], [], final_journal_url
 
     except Exception as e:
-        print(f"SCImago genel hata: {e}")
+        print(f"Ayrıştırma hatası: {e}")
         return None, [], [], scimago_url
+
 
 # ----------------------------------------
 # Flask Rotaları
@@ -142,25 +211,51 @@ def index():
         # 2. Adım: SCImago
         quartile, categories, years, url = get_quartile_from_sjr(issn)
         
-        # Yıla göre eşleştirme mantığı
-        year_categories = []
-        has_exact = False
+        # Her kategori için o yıla ait (veya en yakın) bilgiyi hazırla
+        detailed_categories = []
         
-        if year and categories:
-            # Tam yıl eşleşmesi ara
-            matches = [c for c in categories if c['year'] == year]
-            if matches:
-                year_categories = matches
-                has_exact = True
-            else:
-                # Yoksa en yakın yılı bul
-                # Kategorileri tekilleştir
-                unique_cats = list(set(c['category'] for c in categories))
-                for cat_name in unique_cats:
-                    cat_entries = [c for c in categories if c['category'] == cat_name]
-                    if cat_entries:
-                        closest = min(cat_entries, key=lambda x: abs(x['year'] - year))
-                        year_categories.append(closest)
+        if categories:
+            # Kategorileri grupla
+            from collections import defaultdict
+            cat_map = defaultdict(list)
+            for entry in categories:
+                cat_map[entry['category']].append(entry)
+            
+            # Her kategori için en uygun yılı bul
+            for cat_name, entries in cat_map.items():
+                # Yıla göre sırala
+                sorted_entries = sorted(entries, key=lambda x: x['year'])
+                
+                best_match = None
+                is_exact = False
+                
+                if year:
+                    # Tam eşleşme ara
+                    exact = next((e for e in sorted_entries if e['year'] == year), None)
+                    if exact:
+                        best_match = exact
+                        is_exact = True
+                    else:
+                        # En yakını bul
+                        best_match = min(sorted_entries, key=lambda x: abs(x['year'] - year))
+                        is_exact = False
+                else:
+                    # Yıl yoksa en günceli al
+                    best_match = sorted_entries[-1]
+                    is_exact = False # Aslında 'current' ama exact değil
+                
+                detailed_categories.append({
+                    'category': cat_name,
+                    'quartile': best_match['quartile'],
+                    'year': best_match['year'],
+                    'diff': abs(best_match['year'] - year) if year else 0,
+                    'is_exact': is_exact
+                })
+        
+        # 3. Adım: Genel Kategorileri Sırala (Kategori İsmi ASC, Yıl DESC)
+        # Kullanıcı isteği: Kategoriler alt alta gelsin, karışık olmasın.
+        if categories:
+            categories.sort(key=lambda x: (x['category'], -x['year']))
 
         result = {
             "title": title,
@@ -171,8 +266,7 @@ def index():
             "categories": categories,
             "years": years,
             "scimago_url": url,
-            "year_categories": year_categories,
-            "has_exact_year": has_exact
+            "detailed_categories": detailed_categories
         }
     
     return render_template("index.html", result=result)
@@ -186,56 +280,88 @@ def upload_file():
                 # Orijinal Excel'i oku
                 df = pd.read_excel(file, engine='openpyxl')
                 
-                # Yeni sütunlar için boş listeler
-                new_data = {
-                    'Bulunan Dergi': [],
-                    'Bulunan ISSN': [],
-                    'Yayın Yılı': [],
-                    'Genel Son Quartile': [],
-                    'Makale Yılı Quartile': [],
-                    'Kaynak URL': []
-                }
+                # Yeni yapı için liste
+                all_output_rows = []
                 
                 # Her satırı işle
                 for index, row in df.iterrows():
                     title = str(row.iloc[0]) # İlk sütunu başlık varsayıyoruz
                     
                     if not title or title.lower() == 'nan':
-                        # Boş satırsa boş geç
-                        for key in new_data: new_data[key].append("")
                         continue
                         
                     # Verileri Çek
                     journal, issn, year = get_journal_info(title)
-                    quartile, categories, _, url = get_quartile_from_sjr(issn)
+                    quartile, categories_data, _, url = get_quartile_from_sjr(issn)
                     
-                    # Makale yılındaki quartile'ı hesapla
-                    article_year_q = "Bulunamadı"
-                    if year and categories:
-                        matches = [c['quartile'] for c in categories if c['year'] == year]
-                        if matches:
-                            article_year_q = ", ".join(list(set(matches)))
-                        else:
-                            # En yakını bul
-                            closest = min(categories, key=lambda x: abs(x['year'] - year))
-                            article_year_q = f"{closest['quartile']} (En yakın yıl: {closest['year']})"
-                    
-                    # Listelere ekle
-                    new_data['Bulunan Dergi'].append(journal or "Bulunamadı")
-                    new_data['Bulunan ISSN'].append(issn or "Bulunamadı")
-                    new_data['Yayın Yılı'].append(year or "Bulunamadı")
-                    new_data['Genel Son Quartile'].append(quartile or "Bulunamadı")
-                    new_data['Makale Yılı Quartile'].append(article_year_q)
-                    new_data['Kaynak URL'].append(url or "")
+                    # Eğer hiç kategori verisi yoksa (Bulunamadıysa)
+                    if not categories_data:
+                        all_output_rows.append({
+                            'Makale Başlığı': title,
+                            'Dergi': journal or "Bulunamadı",
+                            'ISSN': issn or "Bulunamadı",
+                            'Yayın Yılı': year or "Bulunamadı",
+                            'Kategori': "Bulunamadı",
+                            'Kategori İlk Yıl': "",
+                            'Kategori Son Yıl': "",
+                            'Kategori İlk Q': "",
+                            'Kategori Son Q': "",
+                            'Makale Yılı Q': "Bulunamadı",
+                            'Genel Son Q': "Bulunamadı",
+                            'Kaynak URL': url or ""
+                        })
+                        continue
 
-                # Yeni verileri DataFrame'e ekle
-                for key, value in new_data.items():
-                    df[key] = value
+                    # Kategorileri grupla
+                    # categories_data listesi [{'category': 'X', 'year': 2020, 'quartile': 'Q1'}, ...] şeklindedir
+                    # Bunu { 'X': [list of entries], 'Y': [...] } şekline getirelim
+                    from collections import defaultdict
+                    cat_map = defaultdict(list)
+                    for entry in categories_data:
+                        cat_map[entry['category']].append(entry)
+                    
+                    # Her kategori için bir satır oluştur
+                    for cat_name, entries in cat_map.items():
+                        # Yıla göre sırala
+                        sorted_entries = sorted(entries, key=lambda x: x['year'])
+                        
+                        start_entry = sorted_entries[0]
+                        end_entry = sorted_entries[-1]
+                        
+                        # Makale yılındaki Q değerini bul
+                        article_q = "Bulunamadı"
+                        if year:
+                            # Tam yıl eşleşmesi
+                            exact_match = next((e for e in sorted_entries if e['year'] == year), None)
+                            if exact_match:
+                                article_q = exact_match['quartile']
+                            else:
+                                # En yakın yıl
+                                closest = min(sorted_entries, key=lambda x: abs(x['year'] - year))
+                                article_q = f"{closest['quartile']} (En yakın: {closest['year']})"
+                        
+                        all_output_rows.append({
+                            'Makale Başlığı': title,
+                            'Dergi': journal,
+                            'ISSN': issn,
+                            'Yayın Yılı': year,
+                            'Kategori': cat_name,
+                            'Kategori İlk Yıl': start_entry['year'],
+                            'Kategori Son Yıl': end_entry['year'],
+                            'Kategori İlk Q': start_entry['quartile'],
+                            'Kategori Son Q': end_entry['quartile'],
+                            'Makale Yılı Q': article_q,
+                            'Genel Son Q': quartile, # Bu derginin genel son durumu
+                            'Kaynak URL': url
+                        })
+
+                # DataFrame oluştur
+                result_df = pd.DataFrame(all_output_rows)
                 
                 # Excel oluştur
                 output = BytesIO()
                 with pd.ExcelWriter(output, engine='openpyxl') as writer:
-                    df.to_excel(writer, index=False)
+                    result_df.to_excel(writer, index=False)
                 output.seek(0)
                 
                 filename = f'analiz_sonuc_{datetime.now().strftime("%H%M%S")}.xlsx'
@@ -244,7 +370,9 @@ def upload_file():
             except Exception as e:
                 return f"Hata oluştu: {str(e)}"
                 
-    return render_template("index.html") # Basitlik için ana sayfaya yönlendiriyoruz veya ayrı sayfa yapılabilir
+    return render_template("index.html", show_upload=True)
+
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    # host='0.0.0.0' yaparak ağdaki diğer cihazların (telefon, diğer pc) erişimine açıyoruz.
+    app.run(host='0.0.0.0', port=5000, debug=False)

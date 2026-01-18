@@ -1,0 +1,45 @@
+Starting Verification...
+
+--- Testing IEEE Access (2169-3536) ---
+SCImago Aranıyor: 2169-3536 - URL: https://www.scimagojr.com/journalsearch.php?q=2169-3536&tip=sid
+URL Erişim Başarılı: https://www.scimagojr.com/journalsearch.php?q=2169-3536&tip=sid
+Arama sonuç sayfasındayız...
+Dergi detayı bulundu: https://www.scimagojr.com/journalsearch.php?q=21100374601&tip=sid&clean=0
+Quartile veri tablosu bulundu.
+Başarılı: En güncel 2024 - Q1
+Result for IEEE Access:
+  Quartile: Q1
+  Years Found: 11
+  URL: https://www.scimagojr.com/journalsearch.php?q=21100374601&tip=sid&clean=0
+  Sample Category: {'category': 'Computer Science (miscellaneous)', 'year': 2014, 'quartile': 'Q1'}
+
+
+--- Testing International Medical Case Reports Journal (1059-0560) ---
+SCImago Aranıyor: 1059-0560 - URL: https://www.scimagojr.com/journalsearch.php?q=1059-0560&tip=sid
+URL Erişim Başarılı: https://www.scimagojr.com/journalsearch.php?q=1059-0560&tip=sid
+Arama sonuç sayfasındayız...
+Dergi detayı bulundu: https://www.scimagojr.com/journalsearch.php?q=22707&tip=sid&clean=0
+Quartile veri tablosu bulundu.
+Başarılı: En güncel 2024 - Q1
+Result for International Medical Case Reports Journal:
+  Quartile: Q1
+  Years Found: 26
+  URL: https://www.scimagojr.com/journalsearch.php?q=22707&tip=sid&clean=0
+  Sample Category: {'category': 'Economics and Econometrics', 'year': 1999, 'quartile': 'Q4'}
+
+
+--- Testing Invalid ISSN (0000-0000) ---
+SCImago Aranıyor: 0000-0000 - URL: https://www.scimagojr.com/journalsearch.php?q=0000-0000&tip=sid
+URL Erişim Başarılı: https://www.scimagojr.com/journalsearch.php?q=0000-0000&tip=sid
+Arama sonuç sayfasındayız...
+Dergi detayı bulundu: https://www.scimagojr.com/journalsearch.php?q=17500155020&tip=sid&clean=0
+Quartile veri tablosu bulundu.
+Başarılı: En güncel 2024 - Q1
+Result for Invalid ISSN:
+  Quartile: Q1
+  Years Found: 15
+  URL: https://www.scimagojr.com/journalsearch.php?q=17500155020&tip=sid&clean=0
+  Sample Category: {'category': 'Atomic and Molecular Physics, and Optics', 'year': 2020, 'quartile': 'Q1'}
+
+
+Verification Finished.
