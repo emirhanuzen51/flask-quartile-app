@@ -48,12 +48,15 @@ def get_quartile_from_sjr(issn):
         return None, [], [], None
 
     scimago_url = f"https://www.scimagojr.com/journalsearch.php?q={issn}&tip=sid"
+    print(f"SCImago aranıyor: {issn} - URL: {scimago_url}")
     
     # Cloudscraper kullanımı (Engel aşmak için kritik nokta)
     scraper = cloudscraper.create_scraper()
     
     try:
         r = scraper.get(scimago_url, timeout=20)
+        print(f"SCImago response status: {r.status_code}")
+        print(f"SCImago final URL: {r.url}")
         
         # Eğer direkt dergi sayfasına yönlendirmezse arama sonuçlarından bulmaya çalış
         soup = BeautifulSoup(r.text, "html.parser")
@@ -61,12 +64,18 @@ def get_quartile_from_sjr(issn):
         # Dergi detay sayfasında mıyız kontrol et
         if "journalsearch.php" in r.url and "tip=sid" not in r.url:
              # Arama sayfasındayız, ilk sonuca tıklamamız lazım
+             print("Arama sayfasında, dergi linki aranıyor...")
              search_results = soup.find('div', class_='search_results')
              if search_results:
                  link = search_results.find('a', href=True)
                  if link:
-                     r = scraper.get("https://www.scimagojr.com/" + link['href'])
+                     journal_url = "https://www.scimagojr.com/" + link['href']
+                     print(f"Dergi linki bulundu: {journal_url}")
+                     r = scraper.get(journal_url)
                      soup = BeautifulSoup(r.text, "html.parser")
+                     print(f"Dergi sayfasına gidildi: {r.url}")
+             else:
+                 print("Arama sonuçları bulunamadı")
 
         # Quartile Tablosunu Bul
         categories_info = []
@@ -74,13 +83,20 @@ def get_quartile_from_sjr(issn):
         
         # Sitedeki tablo yapısını dinamik arama
         tables = soup.find_all('table')
-        for table in tables:
-            if "Quartile" in table.text or "Category" in table.text:
+        print(f"Toplam {len(tables)} tablo bulundu")
+        
+        for i, table in enumerate(tables):
+            table_text = table.get_text()[:100]  # İlk 100 karakter
+            print(f"Tablo {i}: {table_text}")
+            if "Quartile" in table_text or "Category" in table_text:
                 quartiles_table = table
+                print(f"Quartile tablosu bulundu: Tablo {i}")
                 break
         
         if quartiles_table:
             rows = quartiles_table.find_all('tr')
+            print(f"Quartile tablosunda {len(rows)} satır bulundu")
+            
             for row in rows[1:]:
                 cells = row.find_all('td')
                 if len(cells) >= 3:
@@ -90,7 +106,9 @@ def get_quartile_from_sjr(issn):
                         q = cells[2].text.strip()
                         if q in ['Q1', 'Q2', 'Q3', 'Q4']:
                             categories_info.append({'category': cat, 'year': yr, 'quartile': q})
-                    except:
+                            print(f"Bulunan veri: {cat} - {yr} - {q}")
+                    except Exception as e:
+                        print(f"Satır işleme hatası: {e}")
                         continue
         
         # Veri bulundu mu?
@@ -98,12 +116,15 @@ def get_quartile_from_sjr(issn):
             latest_entry = max(categories_info, key=lambda x: x['year'])
             latest_quartile = latest_entry['quartile']
             years_list = sorted(list(set(c['year'] for c in categories_info)))
+            print(f"Başarılı! {len(categories_info)} veri bulundu. Son quartile: {latest_quartile}")
             return latest_quartile, categories_info, years_list, r.url
+        else:
+            print("Hiç quartile verisi bulunamadı!")
             
         return None, [], [], r.url
 
     except Exception as e:
-        print(f"Hata: {e}")
+        print(f"SCImago genel hata: {e}")
         return None, [], [], scimago_url
 
 # ----------------------------------------
